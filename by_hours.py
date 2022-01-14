@@ -1,6 +1,8 @@
 from os import path
 from datetime import date
 from datetime import timedelta
+
+
 class ByHours:
     def __init__(self, index=None, name=None, hour_0=None, date=None,
                  hour_1=None, hour_2=None, hour_3=None,
@@ -43,7 +45,6 @@ class ByHours:
         self.rs_id = rs_id
         # calculated fields
         self.date_date = None
-        
 
     def __str__(self):
         '''
@@ -55,13 +56,14 @@ class ByHours:
                           not name.startswith("__")]
         line_to_return = "[" + " , ".join(list_of_values) + "]"
         return line_to_return
-    
+
     def date_to_date(self):
         '''
         we transform self.date from string into date format
         '''
-        print("we here", self.date[:self.date.find(",")])
+        # print("we here", self.date[:self.date.find(",")])
         self.date_date = to_date(self.date[:self.date.find(",")])
+
 
 def read_by_hours(folder, file_name):
     by_hours_file_name = path.join(folder, file_name)
@@ -97,22 +99,26 @@ def read_by_hours(folder, file_name):
             by_hours.pop()
     return by_hours
 
+
 def to_date(str_date):
-    date_to_return = date(year = get_year(str_date),
-                                 month = get_month(str_date),
-                                 day = get_day(str_date))
+    date_to_return = date(year=get_year(str_date),
+                          month=get_month(str_date),
+                          day=get_day(str_date))
     return date_to_return
 
-def get_dates_from_input_file(file_name='D:\python\double_dno\d_by_hours\input_dates.txt'):
+
+def get_dates_from_input_file(
+        file_name='D:\python\double_dno\d_by_hours\input_dates.txt'):
     in_file = open(file_name, "r")
     date_start_str, date_end_str = in_file.read().split()
     date_start = to_date(date_start_str)
     date_end = to_date(date_end_str)
     return date_start, date_end
 
+
 def get_year(str_date):
     '''
-    we get 
+    we get
     01.01.2022
     10.01.2022
     date format dd.mm.yyyy
@@ -122,10 +128,11 @@ def get_year(str_date):
 
     # print(str_date("."))
     return int(year)
-    
+
+
 def get_month(str_date):
     '''
-    we get 
+    we get
     01.01.2022
     10.01.2022
     date format dd.mm.yyyy
@@ -134,9 +141,10 @@ def get_month(str_date):
     print("month =", month)
     return int(month)
 
+
 def get_day(str_date):
     '''
-    we get 
+    we get
     01.01.2022
     10.01.2022
     date format dd.mm.yyyy
@@ -144,7 +152,8 @@ def get_day(str_date):
     day = str_date[:2]
     print("day =", day)
     return int(day)
-    
+
+
 def print_date(date_to_print):
     if date_to_print.day < 10:
         day_to_print = '0' + str(date_to_print.day)
@@ -166,7 +175,6 @@ by_hours_file_name = "data_utf-8_v3.txt"
 list_of_by_hours = read_by_hours(by_hours_folder, by_hours_file_name)
 
 
-
 # print(str(list_of_by_hours[0].name))
 
 if str(list_of_by_hours[0].name) in ("nazva potoky zapusiv"):
@@ -175,14 +183,15 @@ if str(list_of_by_hours[0].name) in ("nazva potoky zapusiv"):
 else:
     start_line = 0
     print('file w/o headers')
-    
+
 print("by_hours_list:")
 for index in range(start_line, len(list_of_by_hours)):
     list_of_by_hours[index].date_to_date()
     print(list_of_by_hours[index])
 print()
 
-date_start, date_end = get_dates_from_input_file('D:\python\double_dno\d_by_hours\input_dates.txt') 
+date_start, date_end = get_dates_from_input_file(
+    'D:\python\double_dno\d_by_hours\input_dates.txt')
 print(date_start, date_end)
 print_date(date_start)
 print_date(date_end)
@@ -193,9 +202,3 @@ print_date(date_start + timedelta(days=2))
 
 
 # print(date_set)
-
-
-
-    
-
-    
