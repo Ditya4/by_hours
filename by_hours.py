@@ -3,6 +3,61 @@ from datetime import date
 from datetime import timedelta
 
 
+class Streams:
+    def __init__(self, index=None, switch_id=None, switch_name=None, rs_id=None,
+                 rs_name=None):
+        self.index = index
+        self.switch_id = switch_id
+        self.switch_name = switch_name
+        self.rs_id = rs_id
+        self.rs_name = rs_name
+
+    def __str__(self):
+        '''
+        we return a string which almost looks like a list with str value
+        of every field in record
+        '''
+        list_of_values = [str((t)) for name, t in self.__dict__.items()
+                          if type(t).__name__ != "function" and
+                          not name.startswith("__")]
+        line_to_return = "[" + " , ".join(list_of_values) + "]"
+        return line_to_return
+
+def read_streams(folder, file_name):
+    streams_file_name = path.join(folder, file_name)
+    streams_file = open(streams_file_name)
+    streams_lines = streams_file.readlines()
+    size_of_streams_list = len(streams_lines)
+    for index in range(size_of_streams_list):
+        streams_lines[index] = (
+               streams_lines[index].rstrip())
+    streams = [None] * size_of_streams_list
+    in_streams_list_index = 0
+    out_streams_list_index = 0
+    while in_streams_list_index < size_of_streams_list:
+        line_split = (
+               streams_lines[in_streams_list_index].split("    "))
+        if line_split[-1] == "\n":
+            line_split.pop()
+        # print(in_streams_list_index, "line_split =", line_split)
+        if len(line_split) == 4:
+            streams[out_streams_list_index] = (
+                            Streams(out_streams_list_index,
+                            *line_split))
+            in_streams_list_index += 1
+            out_streams_list_index += 1
+        else:
+            print(f"Error in line from file = {file_name}",
+                  f"with index = {in_streams_list_index}",
+                  f"with value {line_split}",
+                  f"wait for 4 parameters",
+                  f"and got {len(line_split)}")
+            size_of_streams_list -= 1
+            in_streams_list_index += 1
+            streams.pop()
+    return streams
+
+
 class ByHours:
     def __init__(self, index=None, name=None, hour_0=None, date=None,
                  hour_1=None, hour_2=None, hour_3=None,
@@ -173,6 +228,14 @@ def print_date(date_to_print):
 by_hours_folder = "D:\python\double_dno\d_by_hours"
 by_hours_file_name = "data_utf-8_v3.txt"
 list_of_by_hours = read_by_hours(by_hours_folder, by_hours_file_name)
+
+# main for streams part():
+streams_folder = "D:\python\double_dno\d_by_hours"
+streams_file_name = "streams.txt"
+list_of_streams = read_streams(streams_folder, streams_file_name)
+print("streams_list:")
+for record in list_of_streams:
+    print(record)
 
 
 # print(str(list_of_by_hours[0].name))
