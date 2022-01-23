@@ -17,7 +17,7 @@ class Streams:
         we return a string which almost looks like a list with str value
         of every field in record
         '''
-        list_of_values = [str((t)) for name, t in self.__dict__.items()
+        list_of_values = [str(t) for name, t in self.__dict__.items()
                           if type(t).__name__ != "function" and
                           not name.startswith("__")]
         line_to_return = "[" + " , ".join(list_of_values) + "]"
@@ -264,6 +264,12 @@ def print_date(date_to_print):
     pass
 
 
+def find_zero_sequence(count_zero, by_hours_record, min_count_zero,
+                       start_date, end_date):
+    print(count_zero, by_hours_record, min_count_zero, start_date, end_date)
+    
+
+
 # main for by_hours part():
 by_hours_folder = "D:\python\double_dno\d_by_hours_2"
 by_hours_file_name = "output.txt"
@@ -276,6 +282,8 @@ for record in list_of_by_hours:
 streams_folder = "D:\python\double_dno\d_by_hours_2"
 streams_file_name = "streams.txt"
 list_of_streams = read_streams(streams_folder, streams_file_name)
+
+min_count_zero = 5
 print("streams_list:")
 for record in list_of_streams:
     print(record)
@@ -307,15 +315,26 @@ print_date(start_date + timedelta(days=2))
 
 for stream_index in range(len(list_of_streams)):
     current_date = start_date
-    while current_date != end_date:
+    count_zero = 0
+    while current_date <= end_date:
         found_day = False
         for by_hours_index in range(len(list_of_by_hours)):
             if list_of_streams[stream_index].stream_id ==\
                         list_of_by_hours[by_hours_index].rs_id:
                 if current_date == list_of_by_hours[by_hours_index].date_date:
                     found_day = True
-        if not found_day:
+        if found_day:
+            pass
+            count_zero = find_zero_sequence(count_zero,
+                                            list_of_by_hours[by_hours_index],
+                                            min_count_zero, start_date, end_date)
+        
+        else:
             print("Flow", list_of_streams[stream_index].stream_name,
                   "ID =", list_of_streams[stream_index].stream_id, "day",
                   current_date, "is empty")
+            count_zero = 0
+
+
         current_date += timedelta(days=1)
+
