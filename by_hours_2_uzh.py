@@ -1,6 +1,7 @@
 from os import path
 from datetime import date
 from datetime import timedelta
+from _codecs import encode
 
 
 class Streams:
@@ -71,6 +72,7 @@ class ByHours:
         # calculated fields
         self.date_date = None
 
+
     def __str__(self):
         '''
         we return a string which almost looks like a list with str value
@@ -112,7 +114,7 @@ def read_by_hours(folder, file_name):
         if len(line_split) == 30:
             by_hours[out_by_hours_list_index] = (
                             ByHours(out_by_hours_list_index,
-                            *line_split))
+                                    *line_split))
             in_by_hours_list_index += 1
             out_by_hours_list_index += 1
         else:
@@ -206,7 +208,7 @@ def to_date(str_date):
 
 
 def get_dates_from_input_file(
-        file_name='D:\python\double_dno\d_by_hours\input_dates.txt'):
+        file_name='D:\python\double_dno\d_by_hours_uzh\input_dates.txt'):
     in_file = open(file_name, "r")
     date_start_str, date_end_str = in_file.read().split()
     start_date = to_date(date_start_str)
@@ -280,7 +282,8 @@ def find_zero_sequence(count_zero, by_hours_record, min_count_zero,
                       by_hours_record.__dict__.items()
                       if name.startswith("h")]
     list_of_names = [str(name) for name, value in
-                     by_hours_record.__dict__.items() if name.startswith("h")]
+                     by_hours_record.__dict__.items()
+                     if name.startswith("h")]
     # print(list_of_names)
     # print(type(list_of_names[0]))
     # print(list_of_values)
@@ -309,7 +312,7 @@ def find_zero_sequence(count_zero, by_hours_record, min_count_zero,
 
 
 # main for by_hours part():
-by_hours_folder = "D:\python\double_dno\d_by_hours_2"
+by_hours_folder = "D:\python\double_dno\d_by_hours_2_uzh"
 by_hours_file_name = "output.csv"
 list_of_by_hours = read_by_hours(by_hours_folder, by_hours_file_name)
 print("by_hours_list:")
@@ -317,7 +320,7 @@ for record in list_of_by_hours:
     print(record)
 
 # main for streams part():
-streams_folder = "D:\python\double_dno\d_by_hours_2"
+streams_folder = "D:\python\double_dno\d_by_hours_2_uzh"
 streams_file_name = "streams.txt"
 list_of_streams = read_streams(streams_folder, streams_file_name)
 
@@ -342,7 +345,7 @@ for index in range(start_line, len(list_of_by_hours)):
 print()
 
 start_date, end_date = get_dates_from_input_file(
-    'D:\python\double_dno\d_by_hours_2\input_dates.txt')
+    'D:\python\double_dno\d_by_hours_2_uzh\input_dates.txt')
 print(start_date, end_date)
 print_date(start_date)
 print_date(end_date)
@@ -351,7 +354,7 @@ print(start_date.weekday(), end_date.weekday())
 print_date(start_date + timedelta(days=1))
 print_date(start_date + timedelta(days=2))
 
-
+min_count_zero = 24
 for stream_index in range(len(list_of_streams)):
     current_date = start_date
     count_zero = 0
@@ -366,8 +369,8 @@ for stream_index in range(len(list_of_streams)):
             pass
             count_zero = find_zero_sequence(count_zero,
                                             list_of_by_hours[by_hours_index],
-                                            min_count_zero,
-                                            start_date, end_date)
+                                            min_count_zero, start_date,
+                                            end_date)
 
         else:
             print("Flow", list_of_streams[stream_index].stream_name,
